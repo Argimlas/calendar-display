@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   StatusDisplay.init();
   Booking.initQuickBooking();
+  Calendar.initCalendar();
 
   console.log("App initialized");
 });

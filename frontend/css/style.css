@@ -35,3 +35,75 @@
         opacity: 0;
     }
 }
+
+/* Calendar */
+.cal-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    min-height: 3rem;
+}
+
+.cal-day-empty {
+    background: transparent;
+}
+
+.cal-day-active {
+    background: #374151; /* gray-700 */
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.cal-day-active:hover {
+    background: #4b5563; /* gray-600 */
+}
+
+.cal-day-today {
+    border: 2px solid #3b82f6; /* blue-500 */
+    background: #1e3a5f;
+}
+
+.cal-day-today:hover {
+    background: #1e40af;
+}
+
+.cal-day-number {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cal-day-events {
+    display: flex;
+    gap: 3px;
+    margin-top: 2px;
+}
+
+.cal-event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3b82f6; /* blue-500 */
+}
+
+/* Modal */
+#booking-modal {
+    backdrop-filter: blur(4px);
+}
+
+#booking-modal:not(.hidden) .modal-content {
+    animation: modal-fade-in 0.2s ease;
+}
+
+@keyframes modal-fade-in {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

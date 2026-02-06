@@ -123,7 +123,9 @@
             id="booking-modal"
             class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50"
         >
-            <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
+            <div
+                class="modal-content bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4"
+            >
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-xl font-semibold">Termin reservieren</h2>
                     <button
@@ -183,7 +185,7 @@
                     <div class="flex gap-3 mt-2">
                         <button
                             type="submit"
-                            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                            class="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg px-4 py-2 transition-colors"
                         >
                             Reservieren
                         </button>
