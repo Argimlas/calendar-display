@@ -32,7 +32,15 @@ const Calendar = {
 
     this.renderCalendar(this.currentYear, this.currentMonth);
 
-    console.log("Calendar initialized");
+    // Auto-refresh every 5 minutes
+    setInterval(
+      () => {
+        this.renderCalendar(this.currentYear, this.currentMonth);
+      },
+      5 * 60 * 1000,
+    );
+
+    console.log("Calendar initialized (5min refresh)");
   },
 
   prevMonth() {

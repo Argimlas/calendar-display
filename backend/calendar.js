@@ -73,7 +73,7 @@ const getEventsForMonth = async (year, month) => {
   }
 };
 
-const createQuickBooking = async (durationMinutes) => {
+const createQuickBooking = async (durationMinutes, title) => {
   try {
     const calendar = await getCalendarClient();
 
@@ -83,7 +83,7 @@ const createQuickBooking = async (durationMinutes) => {
     const res = await calendar.events.insert({
       calendarId: config.CALENDAR_ID,
       resource: {
-        summary: "Spontanbuchung",
+        summary: title,
         start: { dateTime: start.toISOString(), timeZone: config.TIMEZONE },
         end: { dateTime: end.toISOString(), timeZone: config.TIMEZONE },
       },
@@ -111,7 +111,7 @@ const createBooking = async (dateStr, startTime, endTime, title) => {
     const res = await calendar.events.insert({
       calendarId: config.CALENDAR_ID,
       resource: {
-        summary: title || "Reservierung",
+        summary: title,
         start: { dateTime: start.toISOString(), timeZone: config.TIMEZONE },
         end: { dateTime: end.toISOString(), timeZone: config.TIMEZONE },
       },

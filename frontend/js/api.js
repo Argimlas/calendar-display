@@ -26,12 +26,12 @@ const API = {
     }
   },
 
-  async quickBook(durationMinutes) {
+  async quickBook(durationMinutes, title) {
     try {
       const response = await fetch(`${this.baseUrl}/api/quickbook`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ duration: durationMinutes }),
+        body: JSON.stringify({ duration: durationMinutes, title }),
       });
       if (!response.ok) throw new Error("Quick booking failed");
       return await response.json();

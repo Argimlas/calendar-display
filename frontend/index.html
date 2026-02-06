@@ -54,7 +54,14 @@
             <!-- Quickbook Section -->
             <section id="quickbook-section" class="bg-gray-800 rounded-xl p-6">
                 <h2 class="text-lg font-semibold mb-3">Ab jetzt buchen</h2>
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <input
+                        type="text"
+                        id="quickbook-title"
+                        class="bg-gray-700 text-white rounded-lg px-4 py-3 text-lg flex-1 min-w-[200px]"
+                        placeholder="Titel eingeben"
+                        required
+                    />
                     <select
                         id="quickbook-duration"
                         class="bg-gray-700 text-white rounded-lg px-4 py-3 pr-10 text-lg appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.168l3.71-3.938a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200l-4.25-4.5a.75.75%200%2001.02-1.06z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat"
@@ -72,7 +79,7 @@
                     </select>
                     <button
                         id="quickbook-btn"
-                        class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-6 py-2 text-lg transition-colors"
+                        class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-6 py-3 text-lg transition-colors"
                     >
                         Jetzt buchen
                     </button>
@@ -173,13 +180,14 @@
                     </div>
                     <div>
                         <label class="block text-sm text-gray-400 mb-1"
-                            >Titel (optional)</label
+                            >Titel</label
                         >
                         <input
                             type="text"
                             id="book-title"
                             class="w-full bg-gray-700 text-white rounded-lg px-4 py-2"
                             placeholder="z.B. Meeting"
+                            required
                         />
                     </div>
                     <div class="flex gap-3 mt-2">

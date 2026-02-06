@@ -44,13 +44,16 @@ app.get("/api/events", async (req, res) => {
 
 app.post("/api/quickbook", async (req, res) => {
   try {
-    const { duration } = req.body;
+    const { duration, title } = req.body;
     if (!duration || duration <= 0) {
       return res
         .status(400)
         .json({ error: "Valid duration required (in minutes)" });
     }
-    const event = await calendar.createQuickBooking(duration);
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+    const event = await calendar.createQuickBooking(duration, title.trim());
     res.json({ success: true, event });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -60,10 +63,10 @@ app.post("/api/quickbook", async (req, res) => {
 app.post("/api/book", async (req, res) => {
   try {
     const { date, startTime, endTime, title } = req.body;
-    if (!date || !startTime || !endTime) {
+    if (!date || !startTime || !endTime || !title || !title.trim()) {
       return res
         .status(400)
-        .json({ error: "date, startTime and endTime are required" });
+        .json({ error: "date, startTime, endTime and title are required" });
     }
     const event = await calendar.createBooking(date, startTime, endTime, title);
     res.json({ success: true, event });

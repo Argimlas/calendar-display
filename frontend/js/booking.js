@@ -5,6 +5,7 @@ const Booking = {
     this.els = {
       btn: document.getElementById("quickbook-btn"),
       duration: document.getElementById("quickbook-duration"),
+      title: document.getElementById("quickbook-title"),
     };
 
     this.els.btn.addEventListener("click", () => this.handleQuickBook());
@@ -16,6 +17,13 @@ const Booking = {
 
   async handleQuickBook() {
     const duration = parseInt(this.els.duration.value);
+    const title = this.els.title.value.trim();
+
+    if (!title) {
+      this.showToast("Bitte Titel eingeben", "error");
+      this.els.title.focus();
+      return;
+    }
 
     // Only allow booking when room is free
     const status = await API.fetchStatus();
@@ -28,7 +36,7 @@ const Booking = {
     this.els.btn.disabled = true;
     this.els.btn.textContent = "Buche...";
 
-    const result = await API.quickBook(duration);
+    const result = await API.quickBook(duration, title);
 
     // Reset button
     this.els.btn.disabled = false;
@@ -37,7 +45,9 @@ const Booking = {
     if (result && result.success) {
       const label = this.formatDuration(duration);
       this.showToast(`Raum gebucht für ${label}`, "success");
+      this.els.title.value = "";
       StatusDisplay.updateStatus();
+      Calendar.renderCalendar(Calendar.currentYear, Calendar.currentMonth);
     } else {
       this.showToast("Buchung fehlgeschlagen", "error");
     }
@@ -116,8 +126,8 @@ const Booking = {
     const title = this.els.bookTitle.value;
 
     // Validation
-    if (!date || !startTime || !endTime) {
-      this.showToast("Bitte Datum, Start- und Endzeit ausfüllen", "error");
+    if (!date || !startTime || !endTime || !title.trim()) {
+      this.showToast("Bitte alle Pflichtfelder ausfüllen", "error");
       return;
     }
 
