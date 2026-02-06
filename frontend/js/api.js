@@ -56,14 +56,16 @@ const API = {
     }
   },
 
-  async checkAuthStatus() {
+  async deleteEvent(eventId) {
     try {
-      const response = await fetch(`${this.baseUrl}/auth/status`);
-      if (!response.ok) throw new Error("Auth check failed");
+      const response = await fetch(`${this.baseUrl}/api/events/${eventId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Delete failed");
       return await response.json();
     } catch (error) {
-      console.error("API Error (checkAuthStatus):", error);
-      return { authenticated: false };
+      console.error("API Error (deleteEvent):", error);
+      return null;
     }
   },
 };

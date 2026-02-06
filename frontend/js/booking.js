@@ -2,13 +2,17 @@ const Booking = {
   els: {},
 
   initQuickBooking() {
+    const quickForm = document.getElementById("quickbook-form");
     this.els = {
       btn: document.getElementById("quickbook-btn"),
       duration: document.getElementById("quickbook-duration"),
       title: document.getElementById("quickbook-title"),
     };
 
-    this.els.btn.addEventListener("click", () => this.handleQuickBook());
+    quickForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.handleQuickBook();
+    });
 
     this.initBookingModal();
 
@@ -18,12 +22,6 @@ const Booking = {
   async handleQuickBook() {
     const duration = parseInt(this.els.duration.value);
     const title = this.els.title.value.trim();
-
-    if (!title) {
-      this.showToast("Bitte Titel eingeben", "error");
-      this.els.title.focus();
-      return;
-    }
 
     // Only allow booking when room is free
     const status = await API.fetchStatus();
@@ -47,7 +45,11 @@ const Booking = {
       this.showToast(`Raum gebucht für ${label}`, "success");
       this.els.title.value = "";
       StatusDisplay.updateStatus();
-      Calendar.renderCalendar(Calendar.currentYear, Calendar.currentMonth);
+      await Calendar.renderCalendar(
+        Calendar.currentYear,
+        Calendar.currentMonth,
+      );
+      if (Calendar.selectedDate) Calendar.renderPanel(Calendar.selectedDate);
     } else {
       this.showToast("Buchung fehlgeschlagen", "error");
     }
@@ -64,8 +66,6 @@ const Booking = {
 
   initBookingModal() {
     this.els.modal = document.getElementById("booking-modal");
-    this.els.modalOverlay = this.els.modal;
-    this.els.modalContent = this.els.modal.querySelector(".modal-content");
     this.els.form = document.getElementById("booking-form");
     this.els.bookDate = document.getElementById("book-date");
     this.els.bookStart = document.getElementById("book-start");
@@ -164,7 +164,11 @@ const Booking = {
       this.showToast("Termin erfolgreich reserviert", "success");
       this.closeBookingModal();
       StatusDisplay.updateStatus();
-      Calendar.renderCalendar(Calendar.currentYear, Calendar.currentMonth);
+      await Calendar.renderCalendar(
+        Calendar.currentYear,
+        Calendar.currentMonth,
+      );
+      if (Calendar.selectedDate) Calendar.renderPanel(Calendar.selectedDate);
     } else {
       this.showToast("Reservierung fehlgeschlagen", "error");
     }

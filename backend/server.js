@@ -75,6 +75,19 @@ app.post("/api/book", async (req, res) => {
   }
 });
 
+app.delete("/api/events/:eventId", async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    if (!eventId) {
+      return res.status(400).json({ error: "eventId is required" });
+    }
+    await calendar.deleteEvent(eventId);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // --- Auth Routes ---
 
 app.get("/auth/google", (req, res) => {

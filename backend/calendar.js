@@ -125,9 +125,26 @@ const createBooking = async (dateStr, startTime, endTime, title) => {
   }
 };
 
+const deleteEvent = async (eventId) => {
+  try {
+    const calendar = await getCalendarClient();
+
+    await calendar.events.delete({
+      calendarId: config.CALENDAR_ID,
+      eventId,
+    });
+
+    console.log("Event deleted:", eventId);
+  } catch (err) {
+    console.error("Failed to delete event:", err.message);
+    throw err;
+  }
+};
+
 module.exports = {
   getCurrentStatus,
   getEventsForMonth,
   createQuickBooking,
   createBooking,
+  deleteEvent,
 };

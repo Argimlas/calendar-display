@@ -9,8 +9,16 @@
     </head>
     <body class="bg-gray-900 text-white min-h-screen flex flex-col">
         <!-- Header -->
-        <header class="bg-gray-800 px-6 py-4 shadow-lg">
-            <h1 class="text-2xl font-bold">Raum Kalender</h1>
+        <header
+            class="bg-gray-800 px-6 py-4 shadow-lg flex items-center justify-between"
+        >
+            <h1 class="text-2xl font-bold">Raumbelegung Werkstatt</h1>
+            <button
+                id="help-btn"
+                class="bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+            >
+                Hilfe
+            </button>
         </header>
 
         <main class="flex-1 p-6 max-w-5xl mx-auto w-full flex flex-col gap-6">
@@ -54,7 +62,10 @@
             <!-- Quickbook Section -->
             <section id="quickbook-section" class="bg-gray-800 rounded-xl p-6">
                 <h2 class="text-lg font-semibold mb-3">Ab jetzt buchen</h2>
-                <div class="flex items-center gap-4 flex-wrap">
+                <form
+                    id="quickbook-form"
+                    class="flex items-center gap-4 flex-wrap"
+                >
                     <input
                         type="text"
                         id="quickbook-title"
@@ -65,6 +76,7 @@
                     <select
                         id="quickbook-duration"
                         class="bg-gray-700 text-white rounded-lg px-4 py-3 pr-10 text-lg appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.168l3.71-3.938a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200l-4.25-4.5a.75.75%200%2001.02-1.06z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat"
+                        required
                     >
                         <option value="30">30 min</option>
                         <option value="60" selected>1 h</option>
@@ -78,49 +90,77 @@
                         <option value="1440">24 h</option>
                     </select>
                     <button
+                        type="submit"
                         id="quickbook-btn"
                         class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-6 py-3 text-lg transition-colors"
                     >
                         Jetzt buchen
                     </button>
-                </div>
+                </form>
             </section>
 
             <!-- Calendar Section -->
-            <section
-                id="calendar-section"
-                class="bg-gray-800 rounded-xl p-6 flex-1"
-            >
-                <div class="flex items-center justify-between mb-4">
-                    <button
-                        id="cal-prev"
-                        class="bg-gray-700 hover:bg-gray-600 rounded-lg px-4 py-2 transition-colors"
-                    >
-                        &larr;
-                    </button>
-                    <h2 id="cal-title" class="text-xl font-semibold">
-                        Januar 2026
-                    </h2>
-                    <button
-                        id="cal-next"
-                        class="bg-gray-700 hover:bg-gray-600 rounded-lg px-4 py-2 transition-colors"
-                    >
-                        &rarr;
-                    </button>
-                </div>
+            <section id="calendar-section" class="flex-1 flex gap-4">
+                <!-- Calendar Grid -->
                 <div
-                    class="grid grid-cols-7 gap-1 text-center text-sm text-gray-400 mb-2"
+                    id="cal-container"
+                    class="cal-container bg-gray-800 rounded-xl p-6 flex-1 transition-all duration-300"
                 >
-                    <div>Mo</div>
-                    <div>Di</div>
-                    <div>Mi</div>
-                    <div>Do</div>
-                    <div>Fr</div>
-                    <div>Sa</div>
-                    <div>So</div>
+                    <div class="flex items-center justify-between mb-4">
+                        <button
+                            id="cal-prev"
+                            class="bg-gray-700 hover:bg-gray-600 rounded-lg px-4 py-2 transition-colors"
+                        >
+                            &larr;
+                        </button>
+                        <h2 id="cal-title" class="text-xl font-semibold">
+                            Januar 2026
+                        </h2>
+                        <button
+                            id="cal-next"
+                            class="bg-gray-700 hover:bg-gray-600 rounded-lg px-4 py-2 transition-colors"
+                        >
+                            &rarr;
+                        </button>
+                    </div>
+                    <div
+                        class="grid grid-cols-7 gap-1 text-center text-sm text-gray-400 mb-2"
+                    >
+                        <div>Mo</div>
+                        <div>Di</div>
+                        <div>Mi</div>
+                        <div>Do</div>
+                        <div>Fr</div>
+                        <div>Sa</div>
+                        <div>So</div>
+                    </div>
+                    <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
                 </div>
-                <div id="cal-grid" class="grid grid-cols-7 gap-1">
-                    <!-- Calendar days rendered by JS -->
+
+                <!-- Day Detail Panel -->
+                <div
+                    id="day-panel"
+                    class="day-panel hidden bg-gray-800 rounded-xl p-6 flex flex-col"
+                >
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 id="day-panel-date" class="text-2xl font-bold"></h2>
+                        <button
+                            id="day-panel-close"
+                            class="bg-gray-700 hover:bg-gray-600 rounded-lg px-3 py-2 text-lg transition-colors"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                    <div
+                        id="day-panel-events"
+                        class="flex-1 flex flex-col gap-3 overflow-y-auto"
+                    ></div>
+                    <button
+                        id="day-panel-book"
+                        class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-3 text-lg transition-colors w-full"
+                    >
+                        + Neuen Termin
+                    </button>
                 </div>
             </section>
         </main>
@@ -206,6 +246,120 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Confirm Delete Modal -->
+        <div
+            id="confirm-delete-modal"
+            class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            style="backdrop-filter: blur(4px)"
+        >
+            <div
+                class="bg-gray-800 rounded-xl p-6 w-full max-w-sm mx-4 text-center"
+            >
+                <p
+                    id="confirm-delete-title"
+                    class="text-lg font-semibold mb-6"
+                ></p>
+                <div class="flex gap-3">
+                    <button
+                        id="confirm-cancel-btn"
+                        class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                    >
+                        Abbrechen
+                    </button>
+                    <button
+                        id="confirm-delete-btn"
+                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                    >
+                        Löschen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div
+            id="help-modal"
+            class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            style="backdrop-filter: blur(4px)"
+        >
+            <div
+                class="modal-content bg-gray-800 rounded-xl p-6 w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto"
+            >
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-xl font-semibold">Hilfe</h2>
+                    <button
+                        id="help-modal-close"
+                        class="text-gray-400 hover:text-white text-2xl"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div
+                    class="flex flex-col gap-5 text-gray-300 text-sm leading-relaxed"
+                >
+                    <div>
+                        <h3 class="text-base font-semibold text-white mb-1">
+                            Status-Anzeige
+                        </h3>
+                        <p>
+                            Zeigt den aktuellen Belegungsstatus des Raums.
+                            <strong class="text-green-400">Gr&uuml;n</strong>
+                            bedeutet der Raum ist frei,
+                            <strong class="text-red-400">Rot</strong> bedeutet
+                            er ist belegt. Daneben wird die aktuelle Uhrzeit
+                            angezeigt.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-white mb-1">
+                            Schnellbuchung
+                        </h3>
+                        <p>
+                            Wenn der Raum frei ist, kann hier sofort eine
+                            Buchung ab jetzt erstellt werden. Titel eingeben,
+                            gew&uuml;nschte Dauer aus dem Dropdown w&auml;hlen
+                            und &bdquo;Jetzt buchen&ldquo; klicken.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-white mb-1">
+                            Kalender
+                        </h3>
+                        <p>
+                            Die Monats&uuml;bersicht zeigt alle Termine des
+                            aktuellen Monats. Mit den Pfeilen kann zwischen
+                            Monaten navigiert werden. Ein Klick auf einen Tag
+                            &ouml;ffnet die Tagesansicht mit allen Terminen.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-white mb-1">
+                            Tagesansicht
+                        </h3>
+                        <p>
+                            Zeigt alle Termine des ausgew&auml;hlten Tages im
+                            Detail. &Uuml;ber den Button &bdquo;+ Neuen
+                            Termin&ldquo; kann ein neuer Termin f&uuml;r diesen
+                            Tag erstellt werden. Bestehende Termine k&ouml;nnen
+                            &uuml;ber den roten L&ouml;schen-Button entfernt
+                            werden.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-white mb-1">
+                            Termin reservieren
+                        </h3>
+                        <p>
+                            Im Buchungsdialog werden Datum, Start- und Endzeit
+                            sowie ein Titel angegeben. Nach Klick auf
+                            &bdquo;Reservieren&ldquo; wird der Termin im Google
+                            Kalender erstellt.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 

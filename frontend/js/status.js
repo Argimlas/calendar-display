@@ -1,6 +1,5 @@
 const StatusDisplay = {
   els: {},
-  intervalId: null,
 
   init() {
     this.els = {
@@ -16,7 +15,7 @@ const StatusDisplay = {
     setInterval(() => this.updateTime(), 1000);
 
     this.updateStatus();
-    this.intervalId = setInterval(() => this.updateStatus(), 30000);
+    setInterval(() => this.updateStatus(), 30000);
 
     console.log("StatusDisplay initialized (30s refresh)");
   },
@@ -64,8 +63,7 @@ const StatusDisplay = {
     this.els.detail.textContent = `${title} — bis ${end}`;
     this.els.detail.className = "text-red-300 mt-1 text-lg";
 
-    this.els.currentEvent.textContent = `Aktuell: ${title}`;
-    this.els.currentEvent.classList.remove("hidden");
+    this.els.currentEvent.classList.add("hidden");
 
     if (nextEvent) {
       const nextTitle = nextEvent.summary || "Kein Titel";
@@ -94,8 +92,7 @@ const StatusDisplay = {
       );
       this.els.detail.textContent = `Nächster Termin: ${title} um ${start}`;
       this.els.detail.className = "text-green-300 mt-1 text-lg";
-      this.els.nextEvent.textContent = `${title} — ${start}`;
-      this.els.nextEvent.classList.remove("hidden");
+      this.els.nextEvent.classList.add("hidden");
     } else {
       this.els.detail.textContent = "Keine weiteren Termine heute";
       this.els.detail.className = "text-green-300 mt-1 text-lg";
