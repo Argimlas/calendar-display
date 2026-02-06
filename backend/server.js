@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const config = require("./config");
+const auth = require("./auth");
 
 const app = express();
 
@@ -39,14 +40,36 @@ app.post("/api/book", (req, res) => {
   res.json({ success: true, date, startTime, endTime, title });
 });
 
-// --- Auth Routes (placeholder) ---
+// --- Auth Routes ---
 
 app.get("/auth/google", (req, res) => {
-  res.json({ message: "OAuth flow not yet implemented" });
+  const url = auth.getAuthUrl();
+  if (!url) {
+    return res
+      .status(500)
+      .json({ error: "Failed to generate auth URL. Check credentials.json" });
+  }
+  res.redirect(url);
 });
 
-app.get("/auth/callback", (req, res) => {
-  res.json({ message: "OAuth callback not yet implemented" });
+app.get("/auth/callback", async (req, res) => {
+  const { code } = req.query;
+  if (!code) {
+    return res.status(400).send("Missing authorization code");
+  }
+
+  const token = await auth.getTokenFromCode(code);
+  if (!token) {
+    return res.status(500).send("Failed to obtain token. Please try again.");
+  }
+
+  auth.saveToken(token);
+  res.redirect("/?auth=success");
+});
+
+app.get("/auth/status", (req, res) => {
+  const token = auth.loadToken();
+  res.json({ authenticated: token !== null });
 });
 
 // --- Error Handler ---
