@@ -1,0 +1,37 @@
+.status-badge {
+    transition:
+        background-color 0.5s ease,
+        border-color 0.5s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.toast {
+    animation: toast-slide-in 0.3s ease;
+}
+
+.toast-fade-out {
+    animation: toast-fade-out 0.3s ease forwards;
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
