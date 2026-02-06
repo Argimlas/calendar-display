@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const config = require("./config");
 const auth = require("./auth");
+const calendar = require("./calendar");
 
 const app = express();
 
@@ -16,28 +17,59 @@ app.use(express.static(path.join(__dirname, "..", "frontend")));
 
 // --- API Routes ---
 
-app.get("/api/status", (req, res) => {
-  res.json({
-    isOccupied: false,
-    currentEvent: null,
-    nextEvent: null,
-    currentTime: new Date().toISOString(),
-  });
+app.get("/api/status", async (req, res) => {
+  try {
+    const status = await calendar.getCurrentStatus();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.get("/api/events", (req, res) => {
-  const { month } = req.query;
-  res.json({ events: [], month: month || null });
+app.get("/api/events", async (req, res) => {
+  try {
+    const { month } = req.query;
+    if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+      return res
+        .status(400)
+        .json({ error: "Parameter month required (YYYY-MM)" });
+    }
+    const [year, m] = month.split("-").map(Number);
+    const data = await calendar.getEventsForMonth(year, m);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.post("/api/quickbook", (req, res) => {
-  const { duration } = req.body;
-  res.json({ success: true, duration });
+app.post("/api/quickbook", async (req, res) => {
+  try {
+    const { duration } = req.body;
+    if (!duration || duration <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Valid duration required (in minutes)" });
+    }
+    const event = await calendar.createQuickBooking(duration);
+    res.json({ success: true, event });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.post("/api/book", (req, res) => {
-  const { date, startTime, endTime, title } = req.body;
-  res.json({ success: true, date, startTime, endTime, title });
+app.post("/api/book", async (req, res) => {
+  try {
+    const { date, startTime, endTime, title } = req.body;
+    if (!date || !startTime || !endTime) {
+      return res
+        .status(400)
+        .json({ error: "date, startTime and endTime are required" });
+    }
+    const event = await calendar.createBooking(date, startTime, endTime, title);
+    res.json({ success: true, event });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // --- Auth Routes ---
