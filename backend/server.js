@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const path = require("path");
 const config = require("./config");
 const auth = require("./auth");
@@ -8,9 +7,7 @@ const calendar = require("./calendar");
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "..", "frontend")));
@@ -113,11 +110,6 @@ app.get("/auth/callback", async (req, res) => {
 
   auth.saveToken(token);
   res.redirect("/?auth=success");
-});
-
-app.get("/auth/status", (req, res) => {
-  const token = auth.loadToken();
-  res.json({ authenticated: token !== null });
 });
 
 // --- Error Handler ---
