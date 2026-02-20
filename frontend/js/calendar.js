@@ -196,6 +196,8 @@ const Calendar = {
     }
 
     let html = "";
+    const deleteIcon =
+      '<svg class="icon-trash" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 7h10l-1 14H8L7 7z"/></svg>';
     for (const event of dayEvents) {
       const title = event.summary || "Kein Titel";
       const start = this.formatTime(event.start.dateTime || event.start.date);
@@ -206,7 +208,7 @@ const Calendar = {
       html += `<div class="day-panel-event-time">${start} — ${end}</div>`;
       html += `<div class="day-panel-event-title">${title}</div>`;
       html += "</div>";
-      html += `<button class="day-panel-event-delete" data-event-id="${event.id}">&#128465;</button>`;
+      html += `<button class="day-panel-event-delete" data-event-id="${event.id}" aria-label="Löschen" title="Löschen">${deleteIcon}</button>`;
       html += "</div>";
     }
 

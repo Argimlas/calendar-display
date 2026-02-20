@@ -192,6 +192,12 @@
     transition: background-color 0.15s;
 }
 
+.day-panel-event-delete svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
 .day-panel-event-delete:hover {
     background: #b91c1c;
 }
