@@ -7,7 +7,6 @@ const StatusDisplay = {
       badge: document.getElementById("status-badge"),
       time: document.getElementById("status-time"),
       detail: document.getElementById("status-detail"),
-      currentEvent: document.getElementById("status-current-event"),
       nextEvent: document.getElementById("status-next-event"),
     };
 
@@ -63,8 +62,6 @@ const StatusDisplay = {
     this.els.detail.textContent = `${title} — bis ${end}`;
     this.els.detail.className = "text-red-300 mt-1 text-lg";
 
-    this.els.currentEvent.classList.add("hidden");
-
     if (nextEvent) {
       const nextTitle = nextEvent.summary || "Kein Titel";
       const nextStart = this.formatTime(
@@ -82,8 +79,6 @@ const StatusDisplay = {
       "status-badge rounded-xl p-6 bg-green-500/20 border border-green-500/30";
     this.els.badge.textContent = "FREI";
     this.els.badge.className = "text-5xl font-bold text-green-400";
-
-    this.els.currentEvent.classList.add("hidden");
 
     if (nextEvent) {
       const title = nextEvent.summary || "Kein Titel";

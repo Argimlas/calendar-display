@@ -30,6 +30,17 @@ const Calendar = {
     "Samstag",
   ],
 
+  escapeHtml(value) {
+    const map = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return String(value).replace(/[&<>"']/g, (char) => map[char]);
+  },
+
   initCalendar() {
     this.els = {
       title: document.getElementById("cal-title"),
@@ -131,9 +142,11 @@ const Calendar = {
             event.start.dateTime || event.start.date,
           );
           const title = event.summary || "Kein Titel";
-          html += `<div class="cal-event-dot-line" title="${time} ${title}">`;
+          const safeTime = this.escapeHtml(time);
+          const safeTitle = this.escapeHtml(title);
+          html += `<div class="cal-event-dot-line" title="${safeTime} ${safeTitle}">`;
           html += `<span class="cal-event-dot"></span>`;
-          html += `<span class="cal-event-label"><span class="cal-event-time">${time}</span> ${title}</span>`;
+          html += `<span class="cal-event-label"><span class="cal-event-time">${safeTime}</span> ${safeTitle}</span>`;
           html += "</div>";
         }
         html += "</div>";
@@ -202,11 +215,14 @@ const Calendar = {
       const title = event.summary || "Kein Titel";
       const start = this.formatTime(event.start.dateTime || event.start.date);
       const end = this.formatTime(event.end.dateTime || event.end.date);
+      const safeTitle = this.escapeHtml(title);
+      const safeStart = this.escapeHtml(start);
+      const safeEnd = this.escapeHtml(end);
 
       html += '<div class="day-panel-event">';
       html += '<div class="day-panel-event-info">';
-      html += `<div class="day-panel-event-time">${start} — ${end}</div>`;
-      html += `<div class="day-panel-event-title">${title}</div>`;
+      html += `<div class="day-panel-event-time">${safeStart} — ${safeEnd}</div>`;
+      html += `<div class="day-panel-event-title">${safeTitle}</div>`;
       html += "</div>";
       html += `<button class="day-panel-event-delete" data-event-id="${event.id}" aria-label="Löschen" title="Löschen">${deleteIcon}</button>`;
       html += "</div>";

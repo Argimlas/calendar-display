@@ -93,9 +93,14 @@ const getAuthenticatedClient = async () => {
     // Refresh token if expired
     if (token.expiry_date && token.expiry_date < Date.now()) {
       console.log("Token expired, refreshing...");
-      const { credentials } = await client.refreshAccessToken();
-      client.setCredentials(credentials);
-      saveToken(credentials);
+      if (!token.refresh_token) {
+        console.warn("Missing refresh_token; re-authentication required");
+        return null;
+      }
+      const { credentials } = await client.refreshToken(token.refresh_token);
+      const mergedCredentials = { ...token, ...credentials };
+      client.setCredentials(mergedCredentials);
+      saveToken(mergedCredentials);
       console.log("Token refreshed successfully");
     }
 
