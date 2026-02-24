@@ -1,7 +1,112 @@
+/* Scrollbar-Optimierungen für Raspberry Pi X11 */
+html,
+body {
+    /* Scrollbar verbergen */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    /* Rendering Optimierungen */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Entferne Scrollbar vom Help-Modal */
+#help-modal .modal-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#help-modal .modal-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* Entferne Scrollbar vom Quickbook Select */
+#quickbook-duration {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#quickbook-duration::-webkit-scrollbar {
+    display: none;
+}
+
 .status-badge {
     transition:
-        background-color 0.5s ease,
-        border-color 0.5s ease;
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* Touch-optimierte Button-Styles */
+button {
+    /* Mindestgröße für Touch-Geräte (44x44px) */
+    min-height: 44px;
+    /* Schnelleres Feedback für Touch */
+    -webkit-tap-highlight-color: transparent;
+    /* Verhindere Text-Selektion beim Drücken */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Active-State für Touch */
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Touch-optimierte spezifische Button-Styles */
+#help-btn,
+#quickbook-btn,
+#day-panel-book,
+#day-panel-close,
+#cal-prev,
+#cal-next,
+#modal-close {
+    /* Vergrößerte Touch-Ziele */
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    /* Besseres visuelles Feedback */
+    position: relative;
+}
+
+/* Delete-Buttons */
+.day-panel-event-delete {
+    /* Mindestens 44x44px für Touch */
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Touch-optimierte Input-Elemente */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    /* Mindestens 44px Höhe für Touch */
+    min-height: 44px;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem;
+    /* Bessere Lesbarkeit auf Touch */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Quickbook Form Spacing */
+#quickbook-form {
+    gap: 0.75rem;
+}
+
+#quickbook-form input,
+#quickbook-form select {
+    min-height: 48px;
 }
 
 .hidden {
@@ -9,11 +114,11 @@
 }
 
 .toast {
-    animation: toast-slide-in 0.3s ease;
+    animation: toast-slide-in 0.2s ease;
 }
 
 .toast-fade-out {
-    animation: toast-fade-out 0.3s ease forwards;
+    animation: toast-fade-out 0.2s ease forwards;
 }
 
 @keyframes toast-slide-in {
@@ -38,8 +143,17 @@
 
 /* Calendar Layout */
 .cal-container {
-    transition: flex 0.3s ease;
+    transition: flex 0.2s ease;
     flex: 1;
+}
+
+/* Calendar Navigation Buttons */
+#cal-prev,
+#cal-next {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
 }
 
 .cal-container.cal-shrunk {
@@ -134,7 +248,7 @@
 .day-panel {
     flex: 0.45;
     min-width: 0;
-    animation: panel-slide-in 0.3s ease;
+    animation: panel-slide-in 0.2s ease;
 }
 
 @keyframes panel-slide-in {
@@ -204,11 +318,11 @@
 
 /* Modal */
 #booking-modal {
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px);
 }
 
 #booking-modal:not(.hidden) .modal-content {
-    animation: modal-fade-in 0.2s ease;
+    animation: modal-fade-in 0.15s ease;
 }
 
 @keyframes modal-fade-in {

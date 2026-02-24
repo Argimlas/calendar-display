@@ -62,6 +62,9 @@ const Calendar = {
       if (this.selectedDate) Booking.openBookingModal(this.selectedDate);
     });
 
+    // Swipe-Gesten für Monats-Navigation
+    this.initSwipeGestures();
+
     this.renderCalendar(this.currentYear, this.currentMonth);
 
     setInterval(
@@ -73,6 +76,36 @@ const Calendar = {
     );
 
     console.log("Calendar initialized (5min refresh)");
+  },
+
+  initSwipeGestures() {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const swipeThreshold = 50; // Minimum Swipe-Distanz in Pixeln
+
+    this.els.container.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    });
+
+    this.els.container.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      this.handleSwipe(touchStartX, touchEndX, swipeThreshold);
+    });
+
+    console.log("✓ Swipe gestures initialized for calendar");
+  },
+
+  handleSwipe(startX, endX, threshold) {
+    const diff = startX - endX;
+
+    // Swipe nach rechts (vorheriger Monat)
+    if (diff > threshold) {
+      this.prevMonth();
+    }
+    // Swipe nach links (nächster Monat)
+    else if (diff < -threshold) {
+      this.nextMonth();
+    }
   },
 
   prevMonth() {
