@@ -63,7 +63,7 @@ const Calendar = {
     });
 
     // Swipe-Gesten für Monats-Navigation
-    this.initSwipeGestures();
+    //this.initSwipeGestures();
 
     this.renderCalendar(this.currentYear, this.currentMonth);
 
