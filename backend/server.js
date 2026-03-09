@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const config = require("./config");
-const auth = require("./auth");
 const calendar = require("./calendar");
 
 const app = express();
@@ -83,33 +82,6 @@ app.delete("/api/events/:eventId", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-// --- Auth Routes ---
-
-app.get("/auth/google", (req, res) => {
-  const url = auth.getAuthUrl();
-  if (!url) {
-    return res
-      .status(500)
-      .json({ error: "Failed to generate auth URL. Check credentials.json" });
-  }
-  res.redirect(url);
-});
-
-app.get("/auth/callback", async (req, res) => {
-  const { code } = req.query;
-  if (!code) {
-    return res.status(400).send("Missing authorization code");
-  }
-
-  const token = await auth.getTokenFromCode(code);
-  if (!token) {
-    return res.status(500).send("Failed to obtain token. Please try again.");
-  }
-
-  auth.saveToken(token);
-  res.redirect("/?auth=success");
 });
 
 // --- Error Handler ---

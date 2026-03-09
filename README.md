@@ -6,19 +6,25 @@ Local calendar display with Google Calendar integration. Shows room occupancy st
 
 - Node.js + Express (Backend)
 - Vanilla HTML/CSS/JS + TailwindCSS via CDN (Frontend)
-- Google Calendar API (OAuth2)
+- Google Calendar API (Service Account)
 
 ## Setup
 
-### 1. Set up Google Cloud Project
+### 1. Set up Google Cloud Project & Service Account
 
 1. Create a new project in the [Google Cloud Console](https://console.cloud.google.com/)
 2. Enable the Google Calendar API
-3. Create OAuth 2.0 Credentials (Type: Web Application)
-4. Add redirect URI: `http://localhost:3000/auth/callback`
-5. Download `credentials.json` and place it in `backend/`
+3. Go to **IAM & Admin → Service Accounts** → Create Service Account
+4. Create a JSON key for the service account and download it
+5. Place the key file as `backend/service-account.json`
 
-### 2. Configure Environment
+### 2. Share your Calendar with the Service Account
+
+1. Open [Google Calendar](https://calendar.google.com/) → Settings for your calendar
+2. Under **Share with specific people**, add the service account email (e.g. `name@project.iam.gserviceaccount.com`)
+3. Set permission to **Make changes to events**
+
+### 3. Configure Environment
 
 Copy `.env.example` to `.env` and set at least `CALENDAR_ID`.
 
@@ -27,14 +33,14 @@ cp .env.example .env
 # Edit .env (CALENDAR_ID, PORT, TZ)
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
-### 4. Run
+### 5. Run
 
 ```bash
 cd backend
@@ -42,10 +48,6 @@ npm start
 ```
 
 The frontend is served by the backend. Open `http://localhost:3000/` in your browser.
-
-### 5. First-Time OAuth
-
-On first start, open `http://localhost:3000/auth/google` to complete the OAuth flow. A `token.json` file will be created in `backend/`.
 
 ### 6. Development
 
@@ -65,21 +67,22 @@ npm run dev
 ```
 calendar-display/
 ├── backend/
-│   ├── server.js          # Express Server + API Routes
-│   ├── auth.js            # OAuth2 Logic
-│   ├── calendar.js        # Google Calendar API Wrapper
-│   ├── config.js          # Configuration
+│   ├── server.js              # Express Server + API Routes
+│   ├── auth.js                # Service Account Authentication
+│   ├── calendar.js            # Google Calendar API Wrapper
+│   ├── config.js              # Configuration
+│   ├── service-account.json   # Service Account Key (not in git)
 │   └── package.json
 ├── frontend/
-│   ├── index.html         # Main UI
+│   ├── index.html             # Main UI
 │   ├── js/
-│   │   ├── app.js         # Main App Logic
-│   │   ├── calendar.js    # Calendar Rendering
-│   │   ├── status.js      # Status Display
-│   │   ├── booking.js     # Booking Dialogs
-│   │   └── api.js         # API Calls
+│   │   ├── app.js             # Main App Logic
+│   │   ├── calendar.js        # Calendar Rendering
+│   │   ├── status.js          # Status Display
+│   │   ├── booking.js         # Booking Dialogs
+│   │   └── api.js             # API Calls
 │   └── css/
-│       └── style.css      # Custom CSS
+│       └── style.css          # Custom CSS
 ├── .env.example
 ├── .gitignore
 └── README.md
@@ -94,5 +97,3 @@ calendar-display/
 | POST | `/api/quickbook` | Quick booking starting now |
 | POST | `/api/book` | Future reservation |
 | DELETE | `/api/events/:eventId` | Delete event by id |
-| GET | `/auth/google` | Start OAuth flow |
-| GET | `/auth/callback` | OAuth callback |
