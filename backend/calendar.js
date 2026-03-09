@@ -4,7 +4,6 @@ const config = require("./config");
 
 const getCalendarClient = async () => {
   const client = await auth.getAuthenticatedClient();
-  if (!client) throw new Error("Not authenticated");
   return google.calendar({ version: "v3", auth: client });
 };
 
