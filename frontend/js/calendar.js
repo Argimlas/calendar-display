@@ -68,8 +68,8 @@ const Calendar = {
     this.renderCalendar(this.currentYear, this.currentMonth);
 
     setInterval(
-      () => {
-        this.renderCalendar(this.currentYear, this.currentMonth);
+      async () => {
+        await this.renderCalendar(this.currentYear, this.currentMonth);
         if (this.selectedDate) this.renderPanel(this.selectedDate);
       },
       5 * 60 * 1000,
@@ -243,7 +243,7 @@ const Calendar = {
 
     let html = "";
     const deleteIcon =
-      '<svg class="icon-trash" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 7h10l-1 14H8L7 7z"/></svg>';
+      '<svg class="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4h6v2"/></svg>';
     for (const event of dayEvents) {
       const title = event.summary || "Kein Titel";
       const start = this.formatTime(event.start.dateTime || event.start.date);

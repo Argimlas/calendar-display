@@ -118,11 +118,6 @@ const VirtualKeyboard = {
     } else if (key === "Backspace") {
       this.activeInput.value = this.activeInput.value.slice(0, -1);
     } else if (key === "Enter") {
-      // Submit the form
-      const form = this.activeInput.closest("form");
-      if (form) {
-        form.dispatchEvent(new Event("submit"));
-      }
       this.close();
     } else {
       // Regular character

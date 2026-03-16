@@ -4,3 +4,5 @@ backend/credentials.json
 backend/token.json
 backend/service-account.json
 .zed/
+*.md
+!README.md
