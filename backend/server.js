@@ -84,6 +84,34 @@ app.delete("/api/events/:eventId", async (req, res) => {
   }
 });
 
+// --- Hardware / Servo Routes ---
+
+let testOverride = null; // { occupied: boolean, timer: TimeoutId }
+
+app.get("/api/hardware/servo", async (req, res) => {
+  if (testOverride !== null) {
+    return res.json({ occupied: testOverride.occupied });
+  }
+  try {
+    const status = await calendar.getCurrentStatus();
+    res.json({ occupied: status.occupied });
+  } catch (err) {
+    res.status(500).json({ occupied: false, error: err.message });
+  }
+});
+
+app.post("/api/hardware/servo/test", (req, res) => {
+  const { position } = req.body;
+  if (position !== "frei" && position !== "belegt") {
+    return res.status(400).json({ error: 'position must be "frei" or "belegt"' });
+  }
+  if (testOverride) clearTimeout(testOverride.timer);
+  const occupied = position === "belegt";
+  const timer = setTimeout(() => { testOverride = null; }, 30000);
+  testOverride = { occupied, timer };
+  res.json({ ok: true, position, expiresInSeconds: 30 });
+});
+
 // --- Error Handler ---
 
 app.use((err, req, res, next) => {
