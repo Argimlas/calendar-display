@@ -94,7 +94,7 @@ app.get("/api/hardware/servo", async (req, res) => {
   }
   try {
     const status = await calendar.getCurrentStatus();
-    res.json({ occupied: status.occupied });
+    res.json({ occupied: status.isOccupied });
   } catch (err) {
     res.status(500).json({ occupied: false, error: err.message });
   }
@@ -103,11 +103,15 @@ app.get("/api/hardware/servo", async (req, res) => {
 app.post("/api/hardware/servo/test", (req, res) => {
   const { position } = req.body;
   if (position !== "frei" && position !== "belegt") {
-    return res.status(400).json({ error: 'position must be "frei" or "belegt"' });
+    return res
+      .status(400)
+      .json({ error: 'position must be "frei" or "belegt"' });
   }
   if (testOverride) clearTimeout(testOverride.timer);
   const occupied = position === "belegt";
-  const timer = setTimeout(() => { testOverride = null; }, 30000);
+  const timer = setTimeout(() => {
+    testOverride = null;
+  }, 30000);
   testOverride = { occupied, timer };
   res.json({ ok: true, position, expiresInSeconds: 30 });
 });
