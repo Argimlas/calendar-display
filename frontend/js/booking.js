@@ -30,6 +30,12 @@ const Booking = {
       return;
     }
 
+    const label = this.formatDuration(duration);
+    const confirmed = await this.showBookingConfirm(
+      `Sicher, dass du den Raum ab jetzt für ${label} buchen willst?`,
+    );
+    if (!confirmed) return;
+
     // Loading state
     this.els.btn.disabled = true;
     this.els.btn.textContent = "Buche...";
@@ -41,7 +47,6 @@ const Booking = {
     this.els.btn.textContent = "Jetzt buchen";
 
     if (result && result.success) {
-      const label = this.formatDuration(duration);
       this.showToast(`Raum gebucht für ${label}`, "success");
       this.els.title.value = "";
       StatusDisplay.updateStatus();
@@ -151,6 +156,15 @@ const Booking = {
       return;
     }
 
+    const dateObj = new Date(date + "T00:00:00");
+    const dayName = Calendar.DAY_NAMES[dateObj.getDay()];
+    const day = dateObj.getDate();
+    const monthName = Calendar.MONTH_NAMES[dateObj.getMonth()];
+    const confirmed = await this.showBookingConfirm(
+      `Sicher, dass du den Termin am ${dayName}, ${day}. ${monthName} von ${startTime} bis ${endTime} Uhr buchen willst?`,
+    );
+    if (!confirmed) return;
+
     const submitBtn = this.els.form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.textContent = "Reserviere...";
@@ -172,6 +186,30 @@ const Booking = {
     } else {
       this.showToast("Reservierung fehlgeschlagen", "error");
     }
+  },
+
+  showBookingConfirm(message) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById("confirm-booking-modal");
+      document.getElementById("confirm-booking-text").textContent = message;
+      modal.classList.remove("hidden");
+
+      const confirmBtn = document.getElementById("confirm-booking-btn");
+      const cancelBtn = document.getElementById("confirm-booking-cancel");
+
+      const cleanup = (result) => {
+        modal.classList.add("hidden");
+        resolve(result);
+      };
+
+      confirmBtn.addEventListener("click", () => cleanup(true), { once: true });
+      cancelBtn.addEventListener("click", () => cleanup(false), { once: true });
+      modal.addEventListener(
+        "click",
+        (e) => { if (e.target === modal) cleanup(false); },
+        { once: true },
+      );
+    });
   },
 
   showToast(message, type) {

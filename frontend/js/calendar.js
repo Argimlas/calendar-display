@@ -242,8 +242,6 @@ const Calendar = {
     }
 
     let html = "";
-    const deleteIcon =
-      '<svg class="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4h6v2"/></svg>';
     for (const event of dayEvents) {
       const title = event.summary || "Kein Titel";
       const start = this.formatTime(event.start.dateTime || event.start.date);
@@ -257,69 +255,10 @@ const Calendar = {
       html += `<div class="day-panel-event-time">${safeStart} — ${safeEnd}</div>`;
       html += `<div class="day-panel-event-title">${safeTitle}</div>`;
       html += "</div>";
-      html += `<button class="day-panel-event-delete" data-event-id="${event.id}" aria-label="Löschen" title="Löschen">${deleteIcon}</button>`;
       html += "</div>";
     }
 
     this.els.panelEvents.innerHTML = html;
-
-    this.els.panelEvents
-      .querySelectorAll(".day-panel-event-delete")
-      .forEach((btn) => {
-        btn.addEventListener("click", () =>
-          this.confirmDelete(btn.dataset.eventId),
-        );
-      });
-  },
-
-  confirmDelete(eventId) {
-    const event = this.events.find((e) => e.id === eventId);
-    const title = event ? event.summary || "Kein Titel" : "Termin";
-
-    const overlay = document.getElementById("confirm-delete-modal");
-    const titleEl = document.getElementById("confirm-delete-title");
-
-    titleEl.textContent = `"${title}" wirklich löschen?`;
-    overlay.classList.remove("hidden");
-
-    const cleanup = () => {
-      overlay.classList.add("hidden");
-      document
-        .getElementById("confirm-delete-btn")
-        .replaceWith(
-          document.getElementById("confirm-delete-btn").cloneNode(true),
-        );
-      document
-        .getElementById("confirm-cancel-btn")
-        .replaceWith(
-          document.getElementById("confirm-cancel-btn").cloneNode(true),
-        );
-    };
-
-    document
-      .getElementById("confirm-delete-btn")
-      .addEventListener("click", () => {
-        cleanup();
-        this.deleteEvent(eventId);
-      });
-
-    document
-      .getElementById("confirm-cancel-btn")
-      .addEventListener("click", () => {
-        cleanup();
-      });
-  },
-
-  async deleteEvent(eventId) {
-    const result = await API.deleteEvent(eventId);
-    if (result && result.success) {
-      Booking.showToast("Termin gelöscht", "success");
-      await this.renderCalendar(this.currentYear, this.currentMonth);
-      if (this.selectedDate) this.renderPanel(this.selectedDate);
-      StatusDisplay.updateStatus();
-    } else {
-      Booking.showToast("Löschen fehlgeschlagen", "error");
-    }
   },
 };
 

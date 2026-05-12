@@ -56,18 +56,6 @@ const API = {
     }
   },
 
-  async deleteEvent(eventId) {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/events/${eventId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Delete failed");
-      return await response.json();
-    } catch (error) {
-      console.error("API Error (deleteEvent):", error);
-      return null;
-    }
-  },
 };
 
 window.API = API;

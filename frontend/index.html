@@ -247,9 +247,9 @@
             </div>
         </div>
 
-        <!-- Confirm Delete Modal -->
+        <!-- Confirm Booking Modal -->
         <div
-            id="confirm-delete-modal"
+            id="confirm-booking-modal"
             class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50"
             style="backdrop-filter: blur(4px)"
         >
@@ -257,21 +257,24 @@
                 class="bg-gray-800 rounded-xl p-6 w-full max-w-sm mx-4 text-center"
             >
                 <p
-                    id="confirm-delete-title"
-                    class="text-lg font-semibold mb-6"
+                    id="confirm-booking-text"
+                    class="text-lg font-semibold mb-2"
                 ></p>
+                <p class="text-sm text-yellow-400 mb-6">
+                    Ein Löschen ist nicht möglich.
+                </p>
                 <div class="flex gap-3">
                     <button
-                        id="confirm-cancel-btn"
+                        id="confirm-booking-cancel"
                         class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
                     >
                         Abbrechen
                     </button>
                     <button
-                        id="confirm-delete-btn"
-                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                        id="confirm-booking-btn"
+                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
                     >
-                        Löschen
+                        Jetzt buchen
                     </button>
                 </div>
             </div>
@@ -341,9 +344,8 @@
                             Zeigt alle Termine des ausgew&auml;hlten Tages im
                             Detail. &Uuml;ber den Button &bdquo;+ Neuen
                             Termin&ldquo; kann ein neuer Termin f&uuml;r diesen
-                            Tag erstellt werden. Bestehende Termine k&ouml;nnen
-                            &uuml;ber den roten L&ouml;schen-Button entfernt
-                            werden.
+                            Tag erstellt werden. Gebuchte Termine k&ouml;nnen
+                            nicht gel&ouml;scht werden.
                         </p>
                     </div>
                     <div>
