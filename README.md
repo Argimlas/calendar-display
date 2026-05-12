@@ -2,6 +2,10 @@
 
 Local calendar display with Google Calendar integration. Shows room occupancy status, monthly calendar view, quick bookings, and recurring reservations.
 
+> **Deploying to a Raspberry Pi?** See [PI-DEPLOYMENT-GUIDE.md](PI-DEPLOYMENT-GUIDE.md) for the full setup including kiosk mode, hardware (servo, LEDs, shutdown button), and PM2 auto-start.
+>
+> **Developing with AI?** See [AI-CONTEXT.md](AI-CONTEXT.md) for a structured codebase overview optimized for AI assistants.
+
 ## Tech Stack
 
 - Node.js + Express (Backend)
@@ -82,7 +86,8 @@ calendar-display/
 │   │   ├── calendar.js        # Calendar Rendering
 │   │   ├── status.js          # Status Display
 │   │   ├── booking.js         # Booking Dialogs
-│   │   └── api.js             # API Calls
+│   │   ├── api.js             # API Calls
+│   │   └── virtual-keyboard.js # On-Screen QWERTZ Keyboard
 │   └── css/
 │       └── style.css          # Custom CSS
 ├── .env.example
