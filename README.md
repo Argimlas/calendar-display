@@ -1,6 +1,6 @@
 # Raspberry Pi Calendar Display
 
-Local calendar display with Google Calendar integration. Shows room occupancy status, monthly calendar view, quick bookings, and event deletion.
+Local calendar display with Google Calendar integration. Shows room occupancy status, monthly calendar view, quick bookings, and recurring reservations.
 
 ## Tech Stack
 
@@ -60,7 +60,9 @@ npm run dev
 
 - The status badge refreshes every 30 seconds and the calendar refreshes every 5 minutes.
 - Quick booking is only allowed if the room is currently free.
-- Deleting an event prompts for confirmation.
+- Both quick bookings and reservations require a confirmation step before being created.
+- Booked events cannot be deleted through the UI.
+- Reservations can optionally be set as recurring (daily / weekly / monthly) with an end date.
 
 ## Project Structure
 
@@ -95,5 +97,4 @@ calendar-display/
 | GET | `/api/status` | Current room status |
 | GET | `/api/events?month=YYYY-MM` | Events for a given month |
 | POST | `/api/quickbook` | Quick booking starting now |
-| POST | `/api/book` | Future reservation |
-| DELETE | `/api/events/:eventId` | Delete event by id |
+| POST | `/api/book` | Future reservation (supports optional recurrence) |

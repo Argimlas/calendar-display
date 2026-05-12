@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Calendar Display Kiosk
+Comment=Start Calendar Display in Kiosk Mode
+Exec=/home/pi/calendar-display/hardware/start-kiosk.sh
+X-GNOME-Autostart-enabled=true
