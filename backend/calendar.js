@@ -100,17 +100,14 @@ const createBooking = async (dateStr, startTime, endTime, title, recurrence = nu
   try {
     const calendar = await getCalendarClient();
 
-    const start = new Date(`${dateStr}T${startTime}`);
-    const end = new Date(`${dateStr}T${endTime}`);
-
-    if (start >= end) {
+    if (startTime >= endTime) {
       throw new Error("Start time must be before end time");
     }
 
     const resource = {
       summary: title,
-      start: { dateTime: start.toISOString(), timeZone: config.TIMEZONE },
-      end: { dateTime: end.toISOString(), timeZone: config.TIMEZONE },
+      start: { dateTime: `${dateStr}T${startTime}:00`, timeZone: config.TIMEZONE },
+      end: { dateTime: `${dateStr}T${endTime}:00`, timeZone: config.TIMEZONE },
     };
     if (recurrence) resource.recurrence = recurrence;
 

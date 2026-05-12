@@ -1,5 +1,6 @@
 const StatusDisplay = {
   els: {},
+  isOccupied: false,
 
   init() {
     this.els = {
@@ -39,6 +40,7 @@ const StatusDisplay = {
       const data = await API.fetchStatus();
       if (!data) return;
 
+      this.isOccupied = data.isOccupied;
       if (data.isOccupied) {
         this.showOccupied(data.currentEvent, data.nextEvent);
       } else {

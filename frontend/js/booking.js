@@ -23,9 +23,7 @@ const Booking = {
     const duration = parseInt(this.els.duration.value);
     const title = this.els.title.value.trim();
 
-    // Only allow booking when room is free
-    const status = await API.fetchStatus();
-    if (status && status.isOccupied) {
+    if (StatusDisplay.isOccupied) {
       this.showToast("Raum ist belegt — Buchung nicht möglich", "error");
       return;
     }
@@ -165,6 +163,19 @@ const Booking = {
     const durationMin = eh * 60 + em - (sh * 60 + sm);
     if (durationMin < 15) {
       this.showToast("Mindestdauer: 15 Minuten", "error");
+      return;
+    }
+
+    // Check for conflicts with existing events
+    const bookingStart = new Date(`${date}T${startTime}`);
+    const bookingEnd = new Date(`${date}T${endTime}`);
+    const hasConflict = Calendar.events.some((event) => {
+      const evStart = new Date(event.start.dateTime || event.start.date);
+      const evEnd = new Date(event.end.dateTime || event.end.date);
+      return bookingStart < evEnd && bookingEnd > evStart;
+    });
+    if (hasConflict) {
+      this.showToast("Zeitraum ist bereits belegt", "error");
       return;
     }
 
