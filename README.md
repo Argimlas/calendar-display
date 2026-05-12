@@ -90,8 +90,15 @@ calendar-display/
 │   │   └── virtual-keyboard.js # On-Screen QWERTZ Keyboard
 │   └── css/
 │       └── style.css          # Custom CSS
+├── hardware/
+│   ├── servo-controller.py    # Servo + LED controller (polls API every 10s)
+│   ├── shutdown-button.py     # Clean shutdown via GPIO 3 (hold 2s)
+│   ├── start-kiosk.sh         # Launches Chromium in kiosk mode
+│   └── calendar-display.desktop # LXDE autostart entry
 ├── .env.example
 ├── .gitignore
+├── AI-CONTEXT.md
+├── PI-DEPLOYMENT-GUIDE.md
 └── README.md
 ```
 
