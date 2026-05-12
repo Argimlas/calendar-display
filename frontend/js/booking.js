@@ -76,8 +76,19 @@ const Booking = {
     this.els.bookStart = document.getElementById("book-start");
     this.els.bookEnd = document.getElementById("book-end");
     this.els.bookTitle = document.getElementById("book-title");
+    this.els.bookRecurring = document.getElementById("book-recurring");
+    this.els.bookFreq = document.getElementById("book-freq");
+    this.els.bookUntil = document.getElementById("book-until");
+    this.els.recurringOptions = document.getElementById("recurring-options");
     this.els.modalClose = document.getElementById("modal-close");
     this.els.modalCancel = document.getElementById("modal-cancel");
+
+    this.els.bookRecurring.addEventListener("change", () => {
+      this.els.recurringOptions.classList.toggle(
+        "hidden",
+        !this.els.bookRecurring.checked,
+      );
+    });
 
     this.els.form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -122,6 +133,7 @@ const Booking = {
   closeBookingModal() {
     this.els.modal.classList.add("hidden");
     this.els.form.reset();
+    this.els.recurringOptions.classList.add("hidden");
   },
 
   async submitBooking() {
@@ -156,20 +168,50 @@ const Booking = {
       return;
     }
 
+    // Recurrence
+    let recurrence = null;
+    if (this.els.bookRecurring.checked) {
+      const freq = this.els.bookFreq.value;
+      const until = this.els.bookUntil.value;
+      if (!until) {
+        this.showToast(
+          "Bitte ein Enddatum für die Wiederholung angeben",
+          "error",
+        );
+        return;
+      }
+      if (until <= date) {
+        this.showToast(
+          "Enddatum der Wiederholung muss nach dem Startdatum liegen",
+          "error",
+        );
+        return;
+      }
+      recurrence = [`RRULE:FREQ=${freq};UNTIL=${until.replace(/-/g, "")}T235959Z`];
+    }
+
     const dateObj = new Date(date + "T00:00:00");
     const dayName = Calendar.DAY_NAMES[dateObj.getDay()];
     const day = dateObj.getDate();
     const monthName = Calendar.MONTH_NAMES[dateObj.getMonth()];
-    const confirmed = await this.showBookingConfirm(
-      `Sicher, dass du den Termin am ${dayName}, ${day}. ${monthName} von ${startTime} bis ${endTime} Uhr buchen willst?`,
-    );
+
+    let confirmMsg = `Sicher, dass du den Termin am ${dayName}, ${day}. ${monthName} von ${startTime} bis ${endTime} Uhr`;
+    if (recurrence) {
+      const freqLabel = { DAILY: "täglich", WEEKLY: "wöchentlich", MONTHLY: "monatlich" };
+      const untilObj = new Date(this.els.bookUntil.value + "T00:00:00");
+      const untilFormatted = `${untilObj.getDate()}. ${Calendar.MONTH_NAMES[untilObj.getMonth()]} ${untilObj.getFullYear()}`;
+      confirmMsg += ` ${freqLabel[this.els.bookFreq.value]} bis zum ${untilFormatted}`;
+    }
+    confirmMsg += " buchen willst?";
+
+    const confirmed = await this.showBookingConfirm(confirmMsg);
     if (!confirmed) return;
 
     const submitBtn = this.els.form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.textContent = "Reserviere...";
 
-    const result = await API.createBooking(date, startTime, endTime, title);
+    const result = await API.createBooking(date, startTime, endTime, title, recurrence);
 
     submitBtn.disabled = false;
     submitBtn.textContent = "Reservieren";

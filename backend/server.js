@@ -58,13 +58,16 @@ app.post("/api/quickbook", async (req, res) => {
 
 app.post("/api/book", async (req, res) => {
   try {
-    const { date, startTime, endTime, title } = req.body;
+    const { date, startTime, endTime, title, recurrence } = req.body;
     if (!date || !startTime || !endTime || !title || !title.trim()) {
       return res
         .status(400)
         .json({ error: "date, startTime, endTime and title are required" });
     }
-    const event = await calendar.createBooking(date, startTime, endTime, title);
+    if (recurrence !== undefined && recurrence !== null && !Array.isArray(recurrence)) {
+      return res.status(400).json({ error: "recurrence must be an array" });
+    }
+    const event = await calendar.createBooking(date, startTime, endTime, title, recurrence || null);
     res.json({ success: true, event });
   } catch (err) {
     res.status(500).json({ error: err.message });

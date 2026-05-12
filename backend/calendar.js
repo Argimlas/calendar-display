@@ -96,7 +96,7 @@ const createQuickBooking = async (durationMinutes, title) => {
   }
 };
 
-const createBooking = async (dateStr, startTime, endTime, title) => {
+const createBooking = async (dateStr, startTime, endTime, title, recurrence = null) => {
   try {
     const calendar = await getCalendarClient();
 
@@ -107,13 +107,16 @@ const createBooking = async (dateStr, startTime, endTime, title) => {
       throw new Error("Start time must be before end time");
     }
 
+    const resource = {
+      summary: title,
+      start: { dateTime: start.toISOString(), timeZone: config.TIMEZONE },
+      end: { dateTime: end.toISOString(), timeZone: config.TIMEZONE },
+    };
+    if (recurrence) resource.recurrence = recurrence;
+
     const res = await calendar.events.insert({
       calendarId: config.CALENDAR_ID,
-      resource: {
-        summary: title,
-        start: { dateTime: start.toISOString(), timeZone: config.TIMEZONE },
-        end: { dateTime: end.toISOString(), timeZone: config.TIMEZONE },
-      },
+      resource,
     });
 
     console.log("Booking created:", res.data.id);

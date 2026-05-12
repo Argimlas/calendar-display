@@ -41,12 +41,12 @@ const API = {
     }
   },
 
-  async createBooking(date, startTime, endTime, title) {
+  async createBooking(date, startTime, endTime, title, recurrence = null) {
     try {
       const response = await fetch(`${this.baseUrl}/api/book`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date, startTime, endTime, title }),
+        body: JSON.stringify({ date, startTime, endTime, title, recurrence }),
       });
       if (!response.ok) throw new Error("Booking failed");
       return await response.json();
