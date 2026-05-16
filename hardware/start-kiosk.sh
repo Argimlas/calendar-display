@@ -1,6 +1,9 @@
 #!/bin/bash
 
-sleep 20
+export DISPLAY=:0
+
+echo "Waiting for backend..."
+timeout 60 bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 2; done'
 
 xset dpms 60 60 60
 xset s noblank
