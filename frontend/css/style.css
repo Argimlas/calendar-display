@@ -73,6 +73,7 @@ button:active {
 
 /* Touch-optimierte spezifische Button-Styles */
 #help-btn,
+#lang-toggle-btn,
 #quickbook-btn,
 #day-panel-book,
 #day-panel-close,
@@ -107,6 +108,13 @@ textarea {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+}
+
+/* Dark theme: native date/time picker icon defaults to a dark glyph, invisible on dark inputs */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }
 
 /* Quickbook Form Spacing */

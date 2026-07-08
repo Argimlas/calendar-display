@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Raum Kalender</title>
+        <title data-i18n="header.pageTitle">Raum Kalender</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="css/style.css" />
     </head>
@@ -12,12 +12,13 @@
         <header
             class="bg-gray-800 px-6 py-4 shadow-lg flex items-center justify-between"
         >
-            <h1 class="text-2xl font-bold">Raumbelegung Werkstatt</h1>
+            <h1 class="text-2xl font-bold" data-i18n="header.title">Raumbelegung Werkstatt</h1>
             <div class="flex items-center gap-3">
                 <button
                     id="status-refresh-btn"
                     type="button"
                     aria-label="Aktualisieren"
+                    data-i18n-aria-label="header.refreshAriaLabel"
                     class="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg p-2 transition-colors"
                 >
                     <svg
@@ -35,8 +36,18 @@
                     </svg>
                 </button>
                 <button
+                    id="lang-toggle-btn"
+                    type="button"
+                    aria-label="Sprache auf Englisch wechseln"
+                    data-i18n-aria-label="header.langToggleAriaLabel"
+                    class="bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                >
+                    DE
+                </button>
+                <button
                     id="help-btn"
                     class="bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                    data-i18n="header.helpBtn"
                 >
                     Hilfe
                 </button>
@@ -54,12 +65,14 @@
                         <div
                             id="status-badge"
                             class="text-5xl font-bold text-green-400"
+                            data-i18n="status.free"
                         >
                             FREI
                         </div>
                         <p
                             id="status-detail"
                             class="text-green-300 mt-1 text-lg"
+                            data-i18n="status.loading"
                         >
                             Lade Status...
                         </p>
@@ -79,7 +92,7 @@
 
             <!-- Quickbook Section -->
             <section id="quickbook-section" class="bg-gray-800 rounded-xl p-6">
-                <h2 class="text-lg font-semibold mb-3">Ab jetzt buchen</h2>
+                <h2 class="text-lg font-semibold mb-3" data-i18n="quickbook.heading">Ab jetzt buchen</h2>
                 <form
                     id="quickbook-form"
                     class="flex items-center gap-4 flex-wrap"
@@ -89,6 +102,7 @@
                         id="quickbook-title"
                         class="bg-gray-700 text-white rounded-lg px-4 py-3 text-lg flex-1 min-w-[200px]"
                         placeholder="Titel eingeben"
+                        data-i18n-placeholder="quickbook.titlePlaceholder"
                         autocomplete="off"
                         required
                     />
@@ -97,21 +111,22 @@
                         class="bg-gray-700 text-white rounded-lg px-4 py-3 pr-10 text-lg appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%20011.06.02L10%2011.168l3.71-3.938a.75.75%200%20111.08%201.04l-4.25%204.5a.75.75%200%2001-1.08%200l-4.25-4.5a.75.75%200%2001.02-1.06z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat"
                         required
                     >
-                        <option value="30">30 min</option>
-                        <option value="60" selected>1 h</option>
-                        <option value="90">1,5 h</option>
-                        <option value="120">2 h</option>
-                        <option value="180">3 h</option>
-                        <option value="240">4 h</option>
-                        <option value="360">6 h</option>
-                        <option value="480">8 h</option>
-                        <option value="720">12 h</option>
-                        <option value="1440">24 h</option>
+                        <option value="30" data-i18n="quickbook.duration30">30 min</option>
+                        <option value="60" selected data-i18n="quickbook.duration60">1 h</option>
+                        <option value="90" data-i18n="quickbook.duration90">1,5 h</option>
+                        <option value="120" data-i18n="quickbook.duration120">2 h</option>
+                        <option value="180" data-i18n="quickbook.duration180">3 h</option>
+                        <option value="240" data-i18n="quickbook.duration240">4 h</option>
+                        <option value="360" data-i18n="quickbook.duration360">6 h</option>
+                        <option value="480" data-i18n="quickbook.duration480">8 h</option>
+                        <option value="720" data-i18n="quickbook.duration720">12 h</option>
+                        <option value="1440" data-i18n="quickbook.duration1440">24 h</option>
                     </select>
                     <button
                         type="submit"
                         id="quickbook-btn"
                         class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-6 py-3 text-lg transition-colors"
+                        data-i18n="quickbook.bookNow"
                     >
                         Jetzt buchen
                     </button>
@@ -145,13 +160,13 @@
                     <div
                         class="grid grid-cols-7 gap-1 text-center text-sm text-gray-400 mb-2"
                     >
-                        <div>Mo</div>
-                        <div>Di</div>
-                        <div>Mi</div>
-                        <div>Do</div>
-                        <div>Fr</div>
-                        <div>Sa</div>
-                        <div>So</div>
+                        <div data-i18n="calendar.dayAbbrMon">Mo</div>
+                        <div data-i18n="calendar.dayAbbrTue">Di</div>
+                        <div data-i18n="calendar.dayAbbrWed">Mi</div>
+                        <div data-i18n="calendar.dayAbbrThu">Do</div>
+                        <div data-i18n="calendar.dayAbbrFri">Fr</div>
+                        <div data-i18n="calendar.dayAbbrSat">Sa</div>
+                        <div data-i18n="calendar.dayAbbrSun">So</div>
                     </div>
                     <div id="cal-grid" class="grid grid-cols-7 gap-1"></div>
                 </div>
@@ -177,6 +192,7 @@
                     <button
                         id="day-panel-book"
                         class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-3 text-lg transition-colors w-full"
+                        data-i18n="calendar.newEvent"
                     >
                         + Neuen Termin
                     </button>
@@ -193,7 +209,7 @@
                 class="modal-content bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4"
             >
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold">Termin reservieren</h2>
+                    <h2 class="text-xl font-semibold" data-i18n="bookingModal.heading">Termin reservieren</h2>
                     <button
                         id="modal-close"
                         class="text-gray-400 hover:text-white text-2xl"
@@ -203,7 +219,7 @@
                 </div>
                 <form id="booking-form" class="flex flex-col gap-4">
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1"
+                        <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.dateLabel"
                             >Datum</label
                         >
                         <input
@@ -215,7 +231,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm text-gray-400 mb-1"
+                            <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.startLabel"
                                 >Start</label
                             >
                             <input
@@ -226,7 +242,7 @@
                             />
                         </div>
                         <div>
-                            <label class="block text-sm text-gray-400 mb-1"
+                            <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.endLabel"
                                 >Ende</label
                             >
                             <input
@@ -238,7 +254,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1"
+                        <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.titleLabel"
                             >Titel</label
                         >
                         <input
@@ -246,6 +262,7 @@
                             id="book-title"
                             class="w-full bg-gray-700 text-white rounded-lg px-4 py-2"
                             placeholder="z.B. Meeting"
+                            data-i18n-placeholder="bookingModal.titlePlaceholder"
                             autocomplete="off"
                             required
                         />
@@ -259,28 +276,29 @@
                         <label
                             for="book-recurring"
                             class="text-sm text-gray-400 cursor-pointer select-none"
+                            data-i18n="bookingModal.recurring"
                             >Wiederkehrend</label
                         >
                     </div>
                     <div id="recurring-options" class="hidden flex flex-col gap-3">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm text-gray-400 mb-1"
+                                <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.frequency"
                                     >Wiederholung</label
                                 >
                                 <select
                                     id="book-freq"
                                     class="w-full bg-gray-700 text-white rounded-lg px-4 py-2"
                                 >
-                                    <option value="DAILY">Täglich</option>
-                                    <option value="WEEKLY" selected>
+                                    <option value="DAILY" data-i18n="bookingModal.daily">Täglich</option>
+                                    <option value="WEEKLY" selected data-i18n="bookingModal.weekly">
                                         Wöchentlich
                                     </option>
-                                    <option value="MONTHLY">Monatlich</option>
+                                    <option value="MONTHLY" data-i18n="bookingModal.monthly">Monatlich</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm text-gray-400 mb-1"
+                                <label class="block text-sm text-gray-400 mb-1" data-i18n="bookingModal.until"
                                     >Endet am</label
                                 >
                                 <input
@@ -295,6 +313,7 @@
                         <button
                             type="submit"
                             class="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                            data-i18n="bookingModal.submit"
                         >
                             Reservieren
                         </button>
@@ -302,6 +321,7 @@
                             type="button"
                             id="modal-cancel"
                             class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                            data-i18n="common.cancel"
                         >
                             Abbrechen
                         </button>
@@ -323,19 +343,21 @@
                     id="confirm-booking-text"
                     class="text-lg font-semibold mb-2"
                 ></p>
-                <p class="text-sm text-yellow-400 mb-6">
+                <p class="text-sm text-yellow-400 mb-6" data-i18n="confirmModal.noDelete">
                     Ein Löschen ist nicht möglich.
                 </p>
                 <div class="flex gap-3">
                     <button
                         id="confirm-booking-cancel"
                         class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                        data-i18n="common.cancel"
                     >
                         Abbrechen
                     </button>
                     <button
                         id="confirm-booking-btn"
                         class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+                        data-i18n="quickbook.bookNow"
                     >
                         Jetzt buchen
                     </button>
@@ -353,7 +375,7 @@
                 class="modal-content bg-gray-800 rounded-xl p-6 w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto"
             >
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-xl font-semibold">Hilfe</h2>
+                    <h2 class="text-xl font-semibold" data-i18n="helpModal.heading">Hilfe</h2>
                     <button
                         id="help-modal-close"
                         class="text-gray-400 hover:text-white text-2xl"
@@ -365,10 +387,10 @@
                     class="flex flex-col gap-5 text-gray-300 text-sm leading-relaxed"
                 >
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.statusHeading">
                             Status-Anzeige
                         </h3>
-                        <p>
+                        <p data-i18n-html="helpModal.statusBody">
                             Zeigt den aktuellen Belegungsstatus des Raums.
                             <strong class="text-green-400">Gr&uuml;n</strong>
                             bedeutet der Raum ist frei,
@@ -378,10 +400,10 @@
                         </p>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.quickbookHeading">
                             Schnellbuchung
                         </h3>
-                        <p>
+                        <p data-i18n="helpModal.quickbookBody">
                             Wenn der Raum frei ist, kann hier sofort eine
                             Buchung ab jetzt erstellt werden. Titel eingeben,
                             gew&uuml;nschte Dauer aus dem Dropdown w&auml;hlen
@@ -389,10 +411,10 @@
                         </p>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.calendarHeading">
                             Kalender
                         </h3>
-                        <p>
+                        <p data-i18n="helpModal.calendarBody">
                             Die Monats&uuml;bersicht zeigt alle Termine des
                             aktuellen Monats. Mit den Pfeilen kann zwischen
                             Monaten navigiert werden. Ein Klick auf einen Tag
@@ -400,10 +422,10 @@
                         </p>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.dayViewHeading">
                             Tagesansicht
                         </h3>
-                        <p>
+                        <p data-i18n="helpModal.dayViewBody">
                             Zeigt alle Termine des ausgew&auml;hlten Tages im
                             Detail. &Uuml;ber den Button &bdquo;+ Neuen
                             Termin&ldquo; kann ein neuer Termin f&uuml;r diesen
@@ -412,10 +434,10 @@
                         </p>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.bookingHeading">
                             Termin reservieren
                         </h3>
-                        <p>
+                        <p data-i18n="helpModal.bookingBody">
                             Im Buchungsdialog werden Datum, Start- und Endzeit
                             sowie ein Titel angegeben. Nach Klick auf
                             &bdquo;Reservieren&ldquo; wird der Termin im Google
@@ -423,10 +445,10 @@
                         </p>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-white mb-1">
+                        <h3 class="text-base font-semibold text-white mb-1" data-i18n="helpModal.recurringHeading">
                             Wiederkehrende Termine
                         </h3>
-                        <p>
+                        <p data-i18n="helpModal.recurringBody">
                             Im Buchungsdialog kann die Option
                             &bdquo;Wiederkehrend&ldquo; aktiviert werden. Dann
                             l&auml;sst sich ein Wiederholungsintervall
@@ -452,13 +474,14 @@
             class="hidden fixed bottom-0 left-0 right-0 z-50 bg-gray-900 border-t border-gray-700 p-4 shadow-2xl"
         >
             <div class="flex items-center justify-between mb-3">
-                <span class="text-sm text-gray-400">Tastatur</span>
+                <span class="text-sm text-gray-400" data-i18n="vk.label">Tastatur</span>
                 <input
                     id="vk-display"
                     type="text"
                     readonly
                     class="bg-gray-800 text-white border border-gray-600 rounded px-3 py-2 text-sm flex-1 mx-3"
                     placeholder="Text wird hier angezeigt..."
+                    data-i18n-placeholder="vk.placeholder"
                 />
                 <button
                     id="vk-close"
@@ -473,6 +496,7 @@
 
         <!-- Scripts -->
         <script src="js/api.js"></script>
+        <script src="js/i18n.js"></script>
         <script src="js/status.js"></script>
         <script src="js/calendar.js"></script>
         <script src="js/booking.js"></script>

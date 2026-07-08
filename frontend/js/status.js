@@ -17,11 +17,14 @@ const StatusDisplay = {
     this.updateStatus();
     setInterval(() => this.updateStatus(), 30000);
 
+    window.addEventListener("languagechange", () => this.updateStatus());
+
     console.log("StatusDisplay initialized (30s refresh)");
   },
 
   updateTime() {
     const now = new Date();
+    // intentionally locale-fixed to 24h regardless of UI language
     this.els.time.textContent = now.toLocaleTimeString("de-DE", {
       hour: "2-digit",
       minute: "2-digit",
@@ -29,6 +32,7 @@ const StatusDisplay = {
   },
 
   formatTime(dateStr) {
+    // intentionally locale-fixed to 24h regardless of UI language
     return new Date(dateStr).toLocaleTimeString("de-DE", {
       hour: "2-digit",
       minute: "2-digit",
@@ -54,22 +58,22 @@ const StatusDisplay = {
   showOccupied(currentEvent, nextEvent) {
     this.els.section.className =
       "status-badge rounded-xl p-6 bg-red-500/20 border border-red-500/30";
-    this.els.badge.textContent = "BELEGT";
+    this.els.badge.textContent = I18n.t("status.occupied");
     this.els.badge.className = "text-5xl font-bold text-red-400";
 
-    const title = currentEvent.summary || "Kein Titel";
+    const title = currentEvent.summary || I18n.t("common.noTitle");
     const end = this.formatTime(
       currentEvent.end.dateTime || currentEvent.end.date,
     );
-    this.els.detail.textContent = `${title} — bis ${end}`;
+    this.els.detail.textContent = I18n.t("status.occupiedDetail", { title, end });
     this.els.detail.className = "text-red-300 mt-1 text-lg";
 
     if (nextEvent) {
-      const nextTitle = nextEvent.summary || "Kein Titel";
+      const nextTitle = nextEvent.summary || I18n.t("common.noTitle");
       const nextStart = this.formatTime(
         nextEvent.start.dateTime || nextEvent.start.date,
       );
-      this.els.nextEvent.textContent = `Danach: ${nextTitle} um ${nextStart}`;
+      this.els.nextEvent.textContent = I18n.t("status.afterThat", { title: nextTitle, start: nextStart });
       this.els.nextEvent.classList.remove("hidden");
     } else {
       this.els.nextEvent.classList.add("hidden");
@@ -79,19 +83,19 @@ const StatusDisplay = {
   showFree(nextEvent) {
     this.els.section.className =
       "status-badge rounded-xl p-6 bg-green-500/20 border border-green-500/30";
-    this.els.badge.textContent = "FREI";
+    this.els.badge.textContent = I18n.t("status.free");
     this.els.badge.className = "text-5xl font-bold text-green-400";
 
     if (nextEvent) {
-      const title = nextEvent.summary || "Kein Titel";
+      const title = nextEvent.summary || I18n.t("common.noTitle");
       const start = this.formatTime(
         nextEvent.start.dateTime || nextEvent.start.date,
       );
-      this.els.detail.textContent = `Nächster Termin: ${title} um ${start}`;
+      this.els.detail.textContent = I18n.t("status.nextEvent", { title, start });
       this.els.detail.className = "text-green-300 mt-1 text-lg";
       this.els.nextEvent.classList.add("hidden");
     } else {
-      this.els.detail.textContent = "Keine weiteren Termine heute";
+      this.els.detail.textContent = I18n.t("status.noMoreToday");
       this.els.detail.className = "text-green-300 mt-1 text-lg";
       this.els.nextEvent.classList.add("hidden");
     }

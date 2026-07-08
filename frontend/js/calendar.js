@@ -5,30 +5,13 @@ const Calendar = {
   events: [],
   els: {},
 
-  MONTH_NAMES: [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
-  ],
+  get MONTH_NAMES() {
+    return I18n.t("calendar.monthNames");
+  },
 
-  DAY_NAMES: [
-    "Sonntag",
-    "Montag",
-    "Dienstag",
-    "Mittwoch",
-    "Donnerstag",
-    "Freitag",
-    "Samstag",
-  ],
+  get DAY_NAMES() {
+    return I18n.t("calendar.dayNames");
+  },
 
   escapeHtml(value) {
     const map = {
@@ -74,6 +57,11 @@ const Calendar = {
       },
       5 * 60 * 1000,
     );
+
+    window.addEventListener("languagechange", async () => {
+      await this.renderCalendar(this.currentYear, this.currentMonth);
+      if (this.selectedDate) this.renderPanel(this.selectedDate);
+    });
 
     console.log("Calendar initialized (5min refresh)");
   },
@@ -129,6 +117,7 @@ const Calendar = {
   },
 
   formatTime(dateStr) {
+    // intentionally locale-fixed to 24h regardless of UI language
     return new Date(dateStr).toLocaleTimeString("de-DE", {
       hour: "2-digit",
       minute: "2-digit",
@@ -174,7 +163,7 @@ const Calendar = {
           const time = this.formatTime(
             event.start.dateTime || event.start.date,
           );
-          const title = event.summary || "Kein Titel";
+          const title = event.summary || I18n.t("common.noTitle");
           const safeTime = this.escapeHtml(time);
           const safeTitle = this.escapeHtml(title);
           html += `<div class="cal-event-dot-line" title="${safeTime} ${safeTitle}">`;
@@ -237,13 +226,13 @@ const Calendar = {
 
     if (dayEvents.length === 0) {
       this.els.panelEvents.innerHTML =
-        '<p class="text-gray-500 text-lg text-center py-8">Keine Termine</p>';
+        `<p class="text-gray-500 text-lg text-center py-8">${I18n.t("calendar.noEvents")}</p>`;
       return;
     }
 
     let html = "";
     for (const event of dayEvents) {
-      const title = event.summary || "Kein Titel";
+      const title = event.summary || I18n.t("common.noTitle");
       const start = this.formatTime(event.start.dateTime || event.start.date);
       const end = this.formatTime(event.end.dateTime || event.end.date);
       const safeTitle = this.escapeHtml(title);

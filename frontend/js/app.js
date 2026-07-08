@@ -11,6 +11,7 @@ window.App = App;
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Calendar Display app starting...");
 
+  I18n.init();
   StatusDisplay.init();
   Booking.initQuickBooking();
   Calendar.initCalendar();
@@ -27,6 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
       refreshIcon.classList.remove("animate-spin");
       refreshBtn.disabled = false;
     }
+  });
+
+  // Language toggle button
+  document.getElementById("lang-toggle-btn").addEventListener("click", () => {
+    I18n.toggle();
   });
 
   // Help modal

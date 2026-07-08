@@ -24,40 +24,41 @@ const Booking = {
     const title = this.els.title.value.trim();
 
     if (StatusDisplay.isOccupied) {
-      this.showToast("Raum ist belegt — Buchung nicht möglich", "error");
+      this.showToast(I18n.t("booking.roomOccupiedError"), "error");
       return;
     }
 
     const label = this.formatDuration(duration);
     const confirmed = await this.showBookingConfirm(
-      `Sicher, dass du den Raum ab jetzt für ${label} buchen willst?`,
+      I18n.t("booking.quickConfirm", { label }),
     );
     if (!confirmed) return;
 
     // Loading state
     this.els.btn.disabled = true;
-    this.els.btn.textContent = "Buche...";
+    this.els.btn.textContent = I18n.t("quickbook.booking");
 
     const result = await API.quickBook(duration, title);
 
     // Reset button
     this.els.btn.disabled = false;
-    this.els.btn.textContent = "Jetzt buchen";
+    this.els.btn.textContent = I18n.t("quickbook.bookNow");
 
     if (result && result.success) {
-      this.showToast(`Raum gebucht für ${label}`, "success");
+      this.showToast(I18n.t("booking.roomBookedSuccess", { label }), "success");
       this.els.title.value = "";
       await App.refreshAll();
     } else {
-      this.showToast("Buchung fehlgeschlagen", "error");
+      this.showToast(I18n.t("booking.bookingFailed"), "error");
     }
   },
 
   formatDuration(minutes) {
-    if (minutes < 60) return `${minutes} Minuten`;
+    if (minutes < 60) return I18n.t("booking.durationMinutes", { count: minutes });
     const hours = minutes / 60;
-    if (hours === 1) return "1 Stunde";
-    return `${hours.toString().replace(".", ",")} Stunden`;
+    if (hours === 1) return I18n.t("booking.durationHourSingle");
+    const count = I18n.current === "de" ? hours.toString().replace(".", ",") : hours.toString();
+    return I18n.t("booking.durationHoursMulti", { count });
   },
 
   // --- Booking Modal ---
@@ -137,18 +138,18 @@ const Booking = {
 
     // Validation
     if (!date || !startTime || !endTime || !title.trim()) {
-      this.showToast("Bitte alle Pflichtfelder ausfüllen", "error");
+      this.showToast(I18n.t("booking.fillRequiredFields"), "error");
       return;
     }
 
     const today = new Date().toISOString().split("T")[0];
     if (date < today) {
-      this.showToast("Datum darf nicht in der Vergangenheit liegen", "error");
+      this.showToast(I18n.t("booking.dateInPast"), "error");
       return;
     }
 
     if (startTime >= endTime) {
-      this.showToast("Startzeit muss vor Endzeit liegen", "error");
+      this.showToast(I18n.t("booking.startBeforeEnd"), "error");
       return;
     }
 
@@ -157,7 +158,7 @@ const Booking = {
     const [eh, em] = endTime.split(":").map(Number);
     const durationMin = eh * 60 + em - (sh * 60 + sm);
     if (durationMin < 15) {
-      this.showToast("Mindestdauer: 15 Minuten", "error");
+      this.showToast(I18n.t("booking.minDuration"), "error");
       return;
     }
 
@@ -170,7 +171,7 @@ const Booking = {
       return bookingStart < evEnd && bookingEnd > evStart;
     });
     if (hasConflict) {
-      this.showToast("Zeitraum ist bereits belegt", "error");
+      this.showToast(I18n.t("booking.slotOccupied"), "error");
       return;
     }
 
@@ -180,17 +181,11 @@ const Booking = {
       const freq = this.els.bookFreq.value;
       const until = this.els.bookUntil.value;
       if (!until) {
-        this.showToast(
-          "Bitte ein Enddatum für die Wiederholung angeben",
-          "error",
-        );
+        this.showToast(I18n.t("booking.recurrenceEndRequired"), "error");
         return;
       }
       if (until <= date) {
-        this.showToast(
-          "Enddatum der Wiederholung muss nach dem Startdatum liegen",
-          "error",
-        );
+        this.showToast(I18n.t("booking.recurrenceEndAfterStart"), "error");
         return;
       }
       recurrence = [`RRULE:FREQ=${freq};UNTIL=${until.replace(/-/g, "")}T235959Z`];
@@ -201,33 +196,52 @@ const Booking = {
     const day = dateObj.getDate();
     const monthName = Calendar.MONTH_NAMES[dateObj.getMonth()];
 
-    let confirmMsg = `Sicher, dass du den Termin am ${dayName}, ${day}. ${monthName} von ${startTime} bis ${endTime} Uhr`;
+    let confirmMsg;
     if (recurrence) {
-      const freqLabel = { DAILY: "täglich", WEEKLY: "wöchentlich", MONTHLY: "monatlich" };
+      const freqLabel = {
+        DAILY: I18n.t("booking.freqDaily"),
+        WEEKLY: I18n.t("booking.freqWeekly"),
+        MONTHLY: I18n.t("booking.freqMonthly"),
+      };
       const untilObj = new Date(this.els.bookUntil.value + "T00:00:00");
       const untilFormatted = `${untilObj.getDate()}. ${Calendar.MONTH_NAMES[untilObj.getMonth()]} ${untilObj.getFullYear()}`;
-      confirmMsg += ` ${freqLabel[this.els.bookFreq.value]} bis zum ${untilFormatted}`;
+      confirmMsg = I18n.t("booking.confirmRecurring", {
+        day: dayName,
+        date: day,
+        month: monthName,
+        start: startTime,
+        end: endTime,
+        freq: freqLabel[this.els.bookFreq.value],
+        untilDate: untilFormatted,
+      });
+    } else {
+      confirmMsg = I18n.t("booking.confirmSingle", {
+        day: dayName,
+        date: day,
+        month: monthName,
+        start: startTime,
+        end: endTime,
+      });
     }
-    confirmMsg += " buchen willst?";
 
     const confirmed = await this.showBookingConfirm(confirmMsg);
     if (!confirmed) return;
 
     const submitBtn = this.els.form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    submitBtn.textContent = "Reserviere...";
+    submitBtn.textContent = I18n.t("bookingModal.reserving");
 
     const result = await API.createBooking(date, startTime, endTime, title, recurrence);
 
     submitBtn.disabled = false;
-    submitBtn.textContent = "Reservieren";
+    submitBtn.textContent = I18n.t("bookingModal.submit");
 
     if (result && result.success) {
-      this.showToast("Termin erfolgreich reserviert", "success");
+      this.showToast(I18n.t("booking.reservedSuccess"), "success");
       this.closeBookingModal();
       await App.refreshAll();
     } else {
-      this.showToast("Reservierung fehlgeschlagen", "error");
+      this.showToast(I18n.t("booking.reservationFailed"), "error");
     }
   },
 
