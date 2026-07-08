@@ -47,12 +47,7 @@ const Booking = {
     if (result && result.success) {
       this.showToast(`Raum gebucht für ${label}`, "success");
       this.els.title.value = "";
-      StatusDisplay.updateStatus();
-      await Calendar.renderCalendar(
-        Calendar.currentYear,
-        Calendar.currentMonth,
-      );
-      if (Calendar.selectedDate) Calendar.renderPanel(Calendar.selectedDate);
+      await App.refreshAll();
     } else {
       this.showToast("Buchung fehlgeschlagen", "error");
     }
@@ -230,12 +225,7 @@ const Booking = {
     if (result && result.success) {
       this.showToast("Termin erfolgreich reserviert", "success");
       this.closeBookingModal();
-      StatusDisplay.updateStatus();
-      await Calendar.renderCalendar(
-        Calendar.currentYear,
-        Calendar.currentMonth,
-      );
-      if (Calendar.selectedDate) Calendar.renderPanel(Calendar.selectedDate);
+      await App.refreshAll();
     } else {
       this.showToast("Reservierung fehlgeschlagen", "error");
     }
