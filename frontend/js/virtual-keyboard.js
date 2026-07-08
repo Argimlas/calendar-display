@@ -1,13 +1,14 @@
 const VirtualKeyboard = {
   activeInput: null,
   isOpen: false,
+  shiftActive: false,
 
   // QWERTZ German keyboard layout - echte Tastatur-Form
   keyboardLayout: [
     ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
     ["Q", "W", "E", "R", "T", "Z", "U", "I", "O", "P", "Ü"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ö", "Ä"],
-    ["Y", "X", "C", "V", "B", "N", "M", ".", ",", "-"],
+    ["Shift", "Y", "X", "C", "V", "B", "N", "M", ".", ",", "-"],
     ["Space", "Backspace", "Enter"],
   ],
 
@@ -64,6 +65,7 @@ const VirtualKeyboard = {
   close() {
     this.activeInput = null;
     this.isOpen = false;
+    this.setShift(false);
 
     const keyboard = document.getElementById("virtual-keyboard");
     keyboard.classList.add("hidden");
@@ -111,6 +113,11 @@ const VirtualKeyboard = {
   },
 
   handleKeyPress(key) {
+    if (key === "Shift") {
+      this.setShift(!this.shiftActive);
+      return;
+    }
+
     if (!this.activeInput) return;
 
     if (key === "Space") {
@@ -120,8 +127,11 @@ const VirtualKeyboard = {
     } else if (key === "Enter") {
       this.close();
     } else {
-      // Regular character
-      this.activeInput.value += key.toLowerCase();
+      // Regular character - Shift wirkt one-shot auf den nächsten Buchstaben
+      this.activeInput.value += this.shiftActive
+        ? key.toUpperCase()
+        : key.toLowerCase();
+      if (this.shiftActive) this.setShift(false);
     }
 
     // Trigger input event for any listeners
@@ -129,6 +139,14 @@ const VirtualKeyboard = {
 
     // Aktualisiere das Display-Feld
     this.updateDisplay();
+  },
+
+  setShift(active) {
+    this.shiftActive = active;
+    const shiftKey = document.querySelector(
+      '#virtual-keyboard .vk-key[data-key="Shift"]',
+    );
+    if (shiftKey) shiftKey.classList.toggle("vk-key-shift-active", active);
   },
 
   updateDisplay() {
@@ -171,6 +189,9 @@ const VirtualKeyboard = {
         } else if (key === "Enter") {
           keyBtn.className += " vk-key-enter";
           keyBtn.textContent = "⏎";
+        } else if (key === "Shift") {
+          keyBtn.className += " vk-key-shift";
+          keyBtn.textContent = "⇧";
         } else {
           keyBtn.textContent = key;
         }

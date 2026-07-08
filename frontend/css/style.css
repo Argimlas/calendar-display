@@ -432,6 +432,21 @@ textarea {
     background: #b91c1c;
 }
 
+.vk-key-shift {
+    flex: 2;
+    font-size: 1.1rem;
+}
+
+.vk-key-shift-active {
+    background: #2563eb;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.vk-key-shift-active:hover {
+    background: #1d4ed8;
+}
+
 /* Keyboard Animations */
 @keyframes keyboard-slide-up {
     from {
